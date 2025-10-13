@@ -5,6 +5,7 @@ import {
   IconDotsVertical,
   IconLogout,
   IconNotification,
+  IconSettings,
   IconUserCircle,
 } from "@tabler/icons-react";
 
@@ -26,6 +27,7 @@ import {
 } from "@/components/ui/sidebar";
 import { useSession, signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -113,19 +115,19 @@ export function NavUser() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <IconUserCircle />
-                Account
+                <IconSettings />
+                <Link href="/dashboard/settings">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => router.push("/dashboard/billing")}
+                onClick={() => router.push("/dashboard/orders")}
               >
                 <IconCreditCard />
-                Billing
+                Orders
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              {/* <DropdownMenuItem>
                 <IconNotification />
                 Notifications
-              </DropdownMenuItem>
+              </DropdownMenuItem> */}
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleSignOut}>

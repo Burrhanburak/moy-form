@@ -1,9 +1,6 @@
-import { AppSidebar } from "@/components/app-sidebar";
 import { ChartAreaInteractive } from "@/components/chart-area-interactive";
 import { DataTable } from "@/components/data-table";
 import { SectionCards } from "@/components/section-cards";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
@@ -61,13 +58,13 @@ export default async function Page() {
               Dashboard
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Projelerinizi yönetin
+              Manage your projects
             </p>
           </div>
           <Link href="/onboarding?new=true">
-            <Button className="bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
-              <Plus className="w-4 h-4 mr-2" />
-              Yeni Proje
+            <Button className="bg-black text-white rounded-md hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+              <Plus className="w-3 h-3 mr-2" />
+              create new project
             </Button>
           </Link>
         </div>

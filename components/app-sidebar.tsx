@@ -1,14 +1,13 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
- 
   IconDashboard,
   IconFileAi,
   IconFileDescription,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop, 
+  IconInnerShadowTop,
   IconSearch,
   IconSettings,
   IconUsers,
@@ -25,17 +24,16 @@ import {
   IconUser,
   IconLogout,
   IconTools,
-  
-} from "@tabler/icons-react"
+} from "@tabler/icons-react";
 
-import { NavAnalytics } from "@/components/nav-analytics"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
-import { NavSupport } from "@/components/nav-support"
-import { NavGrowth } from "@/components/nav-growth"
-import { NavSettings } from "@/components/nav-settings"
-import { NavBenefits } from "@/components/nav-benefits"
+import { NavAnalytics } from "@/components/nav-analytics";
+import { NavMain } from "@/components/nav-main";
+import { NavSecondary } from "@/components/nav-secondary";
+import { NavUser } from "@/components/nav-user";
+import { NavSupport } from "@/components/nav-support";
+import { NavGrowth } from "@/components/nav-growth";
+import { NavSettings } from "@/components/nav-settings";
+import { NavBenefits } from "@/components/nav-benefits";
 import {
   Sidebar,
   SidebarContent,
@@ -44,15 +42,12 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import { DashboardCommandMenu } from "./dashboard-command-menu"
-import { NavSales } from "@/components/nav-sales"
-
-
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { DashboardCommandMenu } from "./dashboard-command-menu";
+import { NavSales } from "@/components/nav-sales";
 
 const data = {
-
   navMain: [
     {
       title: "Dashboard",
@@ -71,8 +66,6 @@ const data = {
       url: "/dashboard/subscriptions",
       icon: IconUser,
     },
-
-   
   ],
   // billing: [
   //   {
@@ -108,46 +101,46 @@ const data = {
     //   icon: IconHelp,
     // },
   ],
-  growth: [
-    {
-      name: "Offers / Marketplace",
-      url: "/dashboard/growth/marketplace",
-      icon: IconTrendingUp,
-    },
-    // {
-    //   name: "Referral Program",
-    //   url: "/dashboard/growth/referrals",
-    //   icon: IconTrendingUp,
-    //   description: "Invite others and earn rewards when they sign up or make purchases.",
+  // growth: [
+  //   {
+  //     name: "Offers / Marketplace",
+  //     url: "/dashboard/growth/marketplace",
+  //     icon: IconTrendingUp,
+  //   },
+  //   // {
+  //   //   name: "Referral Program",
+  //   //   url: "/dashboard/growth/referrals",
+  //   //   icon: IconTrendingUp,
+  //   //   description: "Invite others and earn rewards when they sign up or make purchases.",
 
-    // },
-    // {
-    //   name: "Templates / Themes",
-    //   url: "/dashboard/growth/marketplace/templates",
-    //   icon: IconTrendingUp,
-    // },
-    // {
-    //   name: "Add-ons & Extras",
-    //   url: "/dashboard/growth/marketplace/addons",
-    //   icon: IconPuzzle,
-    // },
-    // {
-    //   name: "Tools",
-    //   url: "/dashboard/growth/marketplace/tools",
-    //   icon: IconTools,
-    // },
-    // {
-    //   name: "Services",
-    //   url: "/dashboard/growth/marketplace/services",
-    //   icon: IconTools,
-    // },
-  ],
+  //   // },
+  //   // {
+  //   //   name: "Templates / Themes",
+  //   //   url: "/dashboard/growth/marketplace/templates",
+  //   //   icon: IconTrendingUp,
+  //   // },
+  //   // {
+  //   //   name: "Add-ons & Extras",
+  //   //   url: "/dashboard/growth/marketplace/addons",
+  //   //   icon: IconPuzzle,
+  //   // },
+  //   // {
+  //   //   name: "Tools",
+  //   //   url: "/dashboard/growth/marketplace/tools",
+  //   //   icon: IconTools,
+  //   // },
+  //   // {
+  //   //   name: "Services",
+  //   //   url: "/dashboard/growth/marketplace/services",
+  //   //   icon: IconTools,
+  //   // },
+  // ],
   benefits: [
-    {
-      name: "Benefits",
-      url: "/dashboard/benefits",
-      icon: IconFolder,
-    },
+    // {
+    //   name: "Benefits",
+    //   url: "/dashboard/benefits",
+    //   icon: IconFolder,
+    // },
     {
       name: "Create Package",
       url: "/dashboard/benefits/create-package",
@@ -178,9 +171,9 @@ const data = {
   ],
   navSecondary: [
     {
-      title: 'search',
+      title: "search",
       url: "/dashboard/search",
-      component: <DashboardCommandMenu/>,
+      component: <DashboardCommandMenu />,
       icon: IconSearch,
     },
     {
@@ -188,7 +181,6 @@ const data = {
       url: "https://docs.moydus.com",
       icon: IconHelp,
     },
-  
   ],
   // analytics: [
   //   {
@@ -202,7 +194,7 @@ const data = {
   //     icon: IconReportAnalytics,
   //   },
   // ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -225,11 +217,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavSales items={data.Sales} />
-      
+
         {/* <NavBilling items={data.billing} /> */}
         <NavSupport items={data.support} />
-        <NavGrowth items={data.growth} />
-    
+
         <NavBenefits items={data.benefits} />
         {/* <NavAnalytics items={data.analytics} /> */}
         <NavSettings items={data.settings} />
@@ -239,5 +230,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
