@@ -1,0 +1,212 @@
+'use client'
+import { useParams } from "next/navigation"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import FilterDrawer from "@/components/dashboard-fiter-drawer"
+import { ArrowRightIcon, PlusIcon } from "lucide-react"
+import { useState, useMemo } from "react"
+import { DashboardCommandMarketplace } from "@/components/dashboard-command-marketplace"
+
+const allTools = [
+  { id: '1', title: 'Automation Tool', category: 'productivity', images: ['/file.svg', '/custo-5.png'], price: '$29', author: 'Tech Solutions' },
+  { id: '2', title: 'Analytics Dashboard', category: 'analytics', images: ['/placeholder.svg', '/custo-5.png'], price: 'Free', author: 'Data Pro' },
+  { id: '3', title: 'Form Builder', category: 'development', images: ['/globe.svg', '/custo-5.png'], price: '$49', author: 'Dev Tools' },
+  { id: '4', title: 'Social Media Manager', category: 'marketing', images: ['/window.svg', '/custo-5.png'], price: '$79', author: 'Social Pro' },
+  { id: '5', title: 'Project Tracker', category: 'productivity', images: ['/custo-4.png', '/custo-5.png'], price: '$39', author: 'Project Master' },
+  { id: '6', title: 'Email Marketing Tool', category: 'marketing', images: ['/custo-5.png', '/custo-4.png'], price: '$59', author: 'Email Expert' },
+]
+
+export default function ToolCategoryPage() {
+  const { category } = useParams()
+  const [search, setSearch] = useState('')
+  
+  const filtered = useMemo(() => {
+    return allTools.filter((tool) => {
+      const matchesCategory = tool.category.toLowerCase() === category?.toLowerCase()
+      const matchesSearch = tool.title.toLowerCase().includes(search.toLowerCase())
+      return matchesCategory && matchesSearch
+    })
+  }, [category, search])
+
+  const categoryTitle = category ? category.charAt(0).toUpperCase() + category.slice(1) : ''
+  const categoryDescription = {
+    productivity: 'Boost your productivity with powerful automation tools',
+    analytics: 'Make data-driven decisions with comprehensive analytics tools',
+    development: 'Accelerate development with essential development tools',
+    marketing: 'Scale your marketing efforts with professional marketing tools'
+  }[category as string] || ''
+
+  return (
+    <div className="min-h-screen w-full flex justify-center">
+      <div className="w-full max-w-[1200px] px-4 py-10">
+        {/* Breadcrumbs */}
+        <div className="flex items-center gap-1 cursor-default mb-4">
+          <Link href="/dashboard/growth/marketplace" className="text-sm text-gray-500 hover:text-gray-700">
+            Marketplace
+          </Link>
+          <span>/</span>
+          <Link href="/dashboard/growth/marketplace/tools" className="text-sm text-gray-500 hover:text-gray-700">
+            Tools
+          </Link>
+          <span>/</span>
+          <span className="text-sm font-medium">{categoryTitle}</span>
+        </div>
+
+        {/* Page Hero */}
+        <div className="flex flex-col gap-4 mb-8">
+          <h1 className="text-2xl md:text-3xl leading-[1.3] font-semibold">
+            {categoryTitle} Tools
+          </h1>
+          <p className="max-w-[700px] text-gray-500 text-sm md:text-base">
+            {categoryDescription}
+          </p>
+        </div>
+
+        {/* Search */}
+        <div className="flex justify-center mb-6">
+          <DashboardCommandMarketplace />
+        </div>
+
+        {/* Category Scroller */}
+        <div className="overflow-hidden w-full mb-8">
+          <div className="flex gap-2 overflow-x-auto scrollbar-none">
+            <Link
+              href="/dashboard/growth/marketplace/tools/category/productivity"
+              className={`flex items-center flex-shrink-0 gap-3 h-12 px-2.5 rounded-sm transition ${
+                category === 'productivity' 
+                  ? 'bg-blue-100 text-blue-700' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <div className="relative w-10 h-10">
+                <img
+                  src="/file.svg"
+                  alt="Productivity"
+                  className="absolute inset-0 w-full h-full object-cover rounded-sm"
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-sm">Productivity</span>
+            </Link>
+
+            <Link
+              href="/dashboard/growth/marketplace/tools/category/analytics"
+              className={`flex items-center flex-shrink-0 gap-3 h-12 px-2.5 rounded-sm transition ${
+                category === 'analytics' 
+                  ? 'bg-blue-100 text-blue-700' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <div className="relative w-10 h-10">
+                <img
+                  src="/placeholder.svg"
+                  alt="Analytics"
+                  className="absolute inset-0 w-full h-full object-cover rounded-sm"
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-sm">Analytics</span>
+            </Link>
+
+            <Link
+              href="/dashboard/growth/marketplace/tools/category/development"
+              className={`flex items-center flex-shrink-0 gap-3 h-12 px-2.5 rounded-sm transition ${
+                category === 'development' 
+                  ? 'bg-blue-100 text-blue-700' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <div className="relative w-10 h-10">
+                <img
+                  src="/globe.svg"
+                  alt="Development"
+                  className="absolute inset-0 w-full h-full object-cover rounded-sm"
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-sm">Development</span>
+            </Link>
+
+            <Link
+              href="/dashboard/growth/marketplace/tools/category/marketing"
+              className={`flex items-center flex-shrink-0 gap-3 h-12 px-2.5 rounded-sm transition ${
+                category === 'marketing' 
+                  ? 'bg-blue-100 text-blue-700' 
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              <div className="relative w-10 h-10">
+                <img
+                  src="/window.svg"
+                  alt="Marketing"
+                  className="absolute inset-0 w-full h-full object-cover rounded-sm"
+                  loading="lazy"
+                />
+              </div>
+              <span className="text-sm">Marketing</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
+          <Button variant="outline" className="w-fit h-fit p-2">
+            <PlusIcon className="w-4 h-4" />
+            pricing
+          </Button>
+          <Button variant="outline" className="w-fit h-fit p-2">
+            <PlusIcon className="w-4 h-4" />
+            features
+          </Button>
+          <Button variant="outline" className="w-fit h-fit p-2">
+            <PlusIcon className="w-4 h-4" />
+            integrations
+          </Button>
+          <div className="ml-auto">
+            <FilterDrawer />
+          </div>
+        </div>
+
+        {/* Tools Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filtered.map((tool) => (
+            <div
+              key={tool.id}
+              className="group relative"
+            >
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                <img
+                  src={tool.images[0]}
+                  alt={tool.title}
+                  className="absolute inset-0 object-cover transition-opacity duration-300 group-hover:opacity-0"
+                />
+                <img
+                  src={tool.images[1]}
+                  alt={tool.title}
+                  className="absolute inset-0 object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
+              </div>
+
+              <div className="mt-3 flex items-start justify-between gap-2">
+                <div className="flex-1">
+                  <h3 className="text-lg text-black dark:text-white font-semibold">{tool.title}</h3>
+                  <p className="text-sm text-blue-600 mt-1">{tool.price} • {tool.author}</p>
+                </div>
+                <Link href={`/dashboard/growth/marketplace/item/${tool.id}`}>
+                  <button className="text-gray-500 dark:text-gray-400 flex items-center gap-1 text-sm">
+                    View Tool <ArrowRightIcon className="w-4 h-4" />
+                  </button>
+                </Link>
+              </div>
+            </div>
+          ))}
+          {filtered.length === 0 && (
+            <p className="col-span-full text-center text-gray-500">
+              No tools found in {categoryTitle} category.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
