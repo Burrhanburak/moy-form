@@ -1,0 +1,24 @@
+{
+  "name": "Moydus - Digital Solutions",
+  "short_name": "Moydus",
+  "description": "Moydus provides digital solutions including e-commerce, social media management, web design, SaaS platforms, and custom software development.",
+  "icons": [
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}

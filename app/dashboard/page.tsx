@@ -7,6 +7,13 @@ import Link from "next/link";
 import { getOrders } from "@/app/action/order-action";
 import { getSubscriptions } from "@/app/action/subscriptions-action";
 import DashboardAnalytics from "@/components/DashboardAnalytics";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard - Manage Your Digital Projects",
+  description:
+    "Manage your digital projects, track orders, and monitor your business growth with Moydus dashboard.",
+};
 
 export default async function Page() {
   // Get user's orders
