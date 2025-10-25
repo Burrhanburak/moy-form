@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useActionState, useEffect, useState } from "react";
+import { useSegment } from "@/hooks/useSegment";
 import { Building, Phone } from "lucide-react";
 import { submitStepOne } from "@/app/action/step-action";
 import { Button } from "@/components/ui/button";
@@ -38,6 +39,7 @@ type FormData = z.infer<typeof stepOneSchema>;
 
 export default function StepOnePage() {
   const [isNewProject, setIsNewProject] = useState(false);
+  const { track } = useSegment();
 
   const [state, formAction, isPending] = useActionState(submitStepOne, {
     success: false,
@@ -49,11 +51,23 @@ export default function StepOnePage() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     setIsNewProject(urlParams.get("new") === "true");
+
+    // Track onboarding step viewed
+    track("Onboarding Step Viewed", {
+      step_number: "1",
+      step_name: "Business Info",
+    });
   }, []);
 
   useEffect(() => {
     if (state?.success) {
       localStorage.setItem("step-one-completed", "true");
+
+      // Track step completed
+      track("Onboarding Step Completed", {
+        step_number: "1",
+        time_spent: "seconds",
+      });
 
       window.location.href = "/onboarding/step-two";
     }

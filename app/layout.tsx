@@ -8,7 +8,7 @@ import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/server/uploadthing";
 import SegmentProvider from "@/components/providers/segment-provider";
 import { ModeToggle } from "@/components/mode-toggle";
-
+import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -38,7 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {/* <ModeToggle /> */}
-          <SegmentProvider />
+          <Analytics />
           {children}
           <Toaster />
         </ThemeProvider>

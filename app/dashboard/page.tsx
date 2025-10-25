@@ -6,6 +6,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { getOrders } from "@/app/action/order-action";
 import { getSubscriptions } from "@/app/action/subscriptions-action";
+import DashboardAnalytics from "@/components/DashboardAnalytics";
 
 export default async function Page() {
   // Get user's orders
@@ -49,37 +50,39 @@ export default async function Page() {
   }));
 
   return (
-    <div className="@container/main flex flex-1 flex-col gap-2">
-      <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-        {/* Header with New Project Button */}
-        <div className="flex justify-between items-center px-2 lg:px-2">
-          <div>
-            <h1 className="text-2xl font-bold text-black dark:text-white">
-              Dashboard
-            </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Manage your projects
-            </p>
+    <DashboardAnalytics>
+      <div className="@container/main flex flex-1 flex-col gap-2">
+        <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          {/* Header with New Project Button */}
+          <div className="flex justify-between items-center px-2 lg:px-2">
+            <div>
+              <h1 className="text-2xl font-bold text-black dark:text-white">
+                Dashboard
+              </h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Manage your projects
+              </p>
+            </div>
+            <Link href="/onboarding?new=true">
+              <Button className="bg-black text-white rounded-sm hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
+                <Plus className="w-3 h-3 mr-2" />
+                create new project
+              </Button>
+            </Link>
           </div>
-          <Link href="/onboarding?new=true">
-            <Button className="bg-black text-white rounded-sm hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200">
-              <Plus className="w-3 h-3 mr-2" />
-              create new project
-            </Button>
-          </Link>
-        </div>
 
-        <SectionCards
-          totalRevenue={totalRevenue}
-          totalOrders={totalOrders}
-          activeSubscriptions={activeSubscriptions}
-          revenueGrowth={revenueGrowth}
-        />
-        <div className="px-4 lg:px-6">
-          <ChartAreaInteractive />
+          <SectionCards
+            totalRevenue={totalRevenue}
+            totalOrders={totalOrders}
+            activeSubscriptions={activeSubscriptions}
+            revenueGrowth={revenueGrowth}
+          />
+          <div className="px-4 lg:px-6">
+            <ChartAreaInteractive />
+          </div>
+          <DataTable data={tableData} />
         </div>
-        <DataTable data={tableData} />
       </div>
-    </div>
+    </DashboardAnalytics>
   );
 }
