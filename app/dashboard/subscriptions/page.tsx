@@ -1,8 +1,6 @@
 import SubscriptionsClient from "./_components/SubscriptionsClient";
 import { getSubscriptions } from "@/app/action/subscriptions-action";
 
-export const dynamic = "force-dynamic";
-
 export default async function SubscriptionsPage() {
   const result = await getSubscriptions();
 

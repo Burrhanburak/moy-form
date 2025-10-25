@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// Basit middleware - sadece routing kontrolü
-export function middleware(req: NextRequest) {
+// Basit proxy - sadece routing kontrolü
+export default function proxy(req: NextRequest) {
   const { nextUrl } = req;
 
   // Ana sayfa "/" - direkt signup'a yönlendir

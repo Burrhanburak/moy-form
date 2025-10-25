@@ -20,8 +20,8 @@ const nextConfig: NextConfig = {
     ],
   },
   transpilePackages: ["@react-pdf/renderer"],
-  // Enable PPR (Partial Pre-Rendering) for Next.js 16
-  cacheComponents: true,
+  // PPR disabled due to auth headers conflicts
+  // cacheComponents: true,
   // Skip proxy URL normalization (was skipMiddlewareUrlNormalize)
   skipProxyUrlNormalize: true,
   // Turbopack configuration for Next.js 16
