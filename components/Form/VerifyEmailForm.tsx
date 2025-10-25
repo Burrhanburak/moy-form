@@ -146,7 +146,7 @@ export function VerifyEmailForm() {
                     target="_self"
                     className="flex"
                     tabIndex={-1}
-                    href="mailto:support@moydus.com"
+                    href="mailto:info@moydus.com"
                   >
                     <button className="inline-flex items-center justify-center outline-none disabled:pointer-events-none gap-1 font-medium disabled:text-zinc-950/10 dark:disabled:text-white/20 text-[#FF4D00] hover:text-[#FF4D00] dark:hover:text-[#FF4D00] text-xs">
                       <p>Contact support</p>
@@ -168,7 +168,7 @@ export function VerifyEmailForm() {
                     target="_self"
                     className="flex"
                     tabIndex={-1}
-                    href="mailto:support@moydus.com"
+                    href="mailto:info@moydus.com"
                   >
                     <button className="inline-flex items-center justify-center outline-none disabled:pointer-events-none gap-1 font-medium disabled:text-zinc-950/10 dark:disabled:text-white/20 text-green-600 hover:text-green-800 dark:hover:text-green-400 text-xs">
                       <p>Contact support</p>

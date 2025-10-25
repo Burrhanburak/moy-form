@@ -203,10 +203,10 @@ export default function SummaryPage() {
           <p className="text-sm text-black/70 dark:text-white/70">
             {state.error}{" "}
             <a
-              href="mailto:support@moydus.com"
+              href="mailto:info@moydus.com"
               className="underline hover:text-black/70 dark:hover:text-white/70 "
             >
-              support@moydus.com
+              info@moydus.com
             </a>
           </p>
           <Button
@@ -419,7 +419,7 @@ export default function SummaryPage() {
           <div className="text-center text-sm text-black/50 dark:text-white/50">
             By continuing, you agree to our{" "}
             <Link
-              href="https://moydus.com/legal/terms-of-service"
+              href="https://moydus.com/terms-of-service"
               target="_blank"
               className="underline hover:text-black/70 dark:hover:text-white/70 "
             >
@@ -427,7 +427,7 @@ export default function SummaryPage() {
             </Link>{" "}
             and{" "}
             <Link
-              href="https://moydus.com/legal/privacy-policy"
+              href="https://moydus.com/privacy-policy"
               target="_blank"
               className="underline hover:text-black/70 dark:hover:text-white/70 "
             >
@@ -439,7 +439,7 @@ export default function SummaryPage() {
           <div className="flex justify-center text-sm text-black/60 dark:text-white/60">
             Need help?{" "}
             <Link
-              href="mailto:support@moydus.com"
+              href="mailto:info@moydus.com"
               className="ml-1 text-[#FF4D00] hover:text-[#FF4D00]"
             >
               Contact support

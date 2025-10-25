@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
-export default function CancelPage() {
+function CancelContent() {
   const searchParams = useSearchParams();
   const source = searchParams.get("source");
   const packageId = searchParams.get("packageId");
@@ -124,5 +124,13 @@ export default function CancelPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function CancelPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CancelContent />
+    </Suspense>
   );
 }

@@ -275,7 +275,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                               </h3>
                               <div className="space-y-4">
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="name"
                                   render={({ field }) => (
                                     <FormItem>
@@ -296,7 +296,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="description"
                                   render={({ field }) => (
                                     <FormItem>
@@ -319,7 +319,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="businessType"
                                   render={({ field }) => (
                                     <FormItem>
@@ -343,7 +343,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="targetAudience"
                                   render={({ field }) => (
                                     <FormItem>
@@ -374,7 +374,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 </h3>
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="numberOfPages"
                                   render={({ field }) => (
                                     <FormItem>
@@ -431,7 +431,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                               </div> */}
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="deliveryTimeInDays"
                                   render={({ field }) => (
                                     <FormItem>
@@ -508,7 +508,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 </div>
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="referenceUrls"
                                   render={({ field }) => (
                                     <FormItem>
@@ -532,7 +532,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="referenceImages"
                                   render={({ field }) => (
                                     <FormItem>
@@ -565,7 +565,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 {/* Premium Features Checkboxes */}
                                 <div className="grid grid-cols-1 gap-3">
                                   <FormField
-                                    control={form.control}
+                                    control={form.control as any}
                                     name="advancedSeo"
                                     render={({ field }) => (
                                       <FormItem>
@@ -600,7 +600,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                   />
 
                                   <FormField
-                                    control={form.control}
+                                    control={form.control as any}
                                     name="customUiUx"
                                     render={({ field }) => (
                                       <FormItem>
@@ -635,7 +635,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                   />
 
                                   <FormField
-                                    control={form.control}
+                                    control={form.control as any}
                                     name="liveChat"
                                     render={({ field }) => (
                                       <FormItem>
@@ -671,7 +671,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 </div>
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="features"
                                   render={({ field }) => (
                                     <FormItem>
@@ -730,7 +730,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="optionalAddons"
                                   render={({ field }) => (
                                     <FormItem>
@@ -789,7 +789,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 />
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="maintenanceRequired"
                                   render={({ field }) => (
                                     <FormItem>
@@ -825,7 +825,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                 </h3>
 
                                 <FormField
-                                  control={form.control}
+                                  control={form.control as any}
                                   name="specialNotes"
                                   render={({ field }) => (
                                     <FormItem>

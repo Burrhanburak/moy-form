@@ -175,7 +175,7 @@ export default function StepFourPage() {
             <div className="text-sm text-black/50 dark:text-white/50 decoration-white/30 underline-offset-[3px]">
               By continuing, you agree to the{" "}
               <Link
-                href="https://moydus.com/legal/terms-of-service"
+                href="https://moydus.com/terms-of-service"
                 className="underline hover:text-black/70 dark:hover:text-white/70 "
                 target="_blank"
               >
@@ -183,7 +183,7 @@ export default function StepFourPage() {
               </Link>{" "}
               and{" "}
               <Link
-                href="https://moydus.com/legal/privacy-policy"
+                href="https://moydus.com/privacy-policy"
                 className="underline hover:text-black/70 dark:hover:text-white/70 "
                 target="_blank"
               >
@@ -202,7 +202,7 @@ export default function StepFourPage() {
               target="_self"
               className="flex"
               tabIndex={-1}
-              href="mailto:support@moydus.com"
+              href="mailto:info@moydus.com"
             >
               <button className="inline-flex items-center justify-center outline-none disabled:pointer-events-none gap-1 font-medium disabled:text-zinc-950/10 dark:disabled:text-white/20 text-[#FF4D00] hover:text-[#FF4D00] dark:hover:text-[#FF4D00] text-xs">
                 <p>Contact support</p>

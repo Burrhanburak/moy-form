@@ -40,8 +40,8 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             </h1>
             <p className="text-sm text-muted-foreground">
               Invalid session. Please contact{" "}
-              <a href="mailto:support@moydus.com" className="underline">
-                support@moydus.com
+              <a href="mailto:info@moydus.com" className="underline">
+                info@moydus.com
               </a>
               .
             </p>
@@ -93,8 +93,8 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             </h1>
             <p className="text-sm text-muted-foreground">
               {error || "Session not found"}{" "}
-              <a href="mailto:support@moydus.com" className="underline">
-                support@moydus.com
+              <a href="mailto:info@moydus.com" className="underline">
+                info@moydus.com
               </a>
               .
             </p>
@@ -185,16 +185,16 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
           <div className="text-sm text-muted-foreground">
             Questions? Contact{" "}
             <Link
-              href="mailto:support@moydus.com"
+              href="mailto:info@moydus.com"
               className="text-green-600 hover:text-green-700 underline"
             >
-              support@moydus.com
+              info@moydus.com
             </Link>
           </div>
           <div className="text-xs text-muted-foreground">
             By continuing, you agree to our{" "}
             <Link
-              href="https://moydus.com/legal/terms-of-service"
+              href="https://moydus.com/terms-of-service"
               className="underline hover:text-muted-foreground/70"
               target="_blank"
             >
@@ -202,7 +202,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             </Link>{" "}
             and{" "}
             <Link
-              href="https://moydus.com/legal/privacy-policy"
+              href="https://moydus.com/privacy-policy"
               className="underline hover:text-muted-foreground/70"
               target="_blank"
             >

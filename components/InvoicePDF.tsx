@@ -272,7 +272,7 @@ const InvoicePDFDocument = ({ subscription, billingInfo }: InvoicePDFProps) => {
         {/* Footer */}
         <PDFView style={styles.footer}>
           <PDFText>Thank you for choosing MOYDUS LLC!</PDFText>
-          <PDFText>For support, contact us at support@moydus.com</PDFText>
+          <PDFText>For support, contact us at info@moydus.com</PDFText>
         </PDFView>
       </PDFPage>
     </PDFDocument>

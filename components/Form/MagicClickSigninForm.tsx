@@ -152,7 +152,9 @@ export function MagicClickSigninForm({
               <div className="grow h-px bg-[#999999]/10 dark:bg-white/10"></div>
             </div>
             <GoogleButton redirectTo="/dashboard" mode="login">
-              Continue with Google
+              <span className="text-black dark:text-black text-sm">
+                Continue with Google
+              </span>
             </GoogleButton>
           </form>
 
@@ -169,7 +171,7 @@ export function MagicClickSigninForm({
           <div className="text-sm text-[#999999] mt-15 dark:text-white/50">
             By signing in, you agree to the{" "}
             <Link
-              href="https://moydus.com/legal/terms-of-service"
+              href="https://moydus.com/terms-of-service"
               className="text-[#999999] underline underline-offset-2 hover:dark:text-white/70 hover:text-white/70"
               target="_blank"
             >
@@ -177,7 +179,7 @@ export function MagicClickSigninForm({
             </Link>{" "}
             and{" "}
             <Link
-              href="https://moydus.com/legal/privacy-policy"
+              href="https://moydus.com/privacy-policy"
               className="text-[#999999] underline underline-offset-2 hover:dark:text-white/70 hover:text-white/70"
               target="_blank"
             >
@@ -193,7 +195,7 @@ export function MagicClickSigninForm({
               target="_self"
               className="flex"
               tabIndex={-1}
-              href="mailto:support@moydus.com"
+              href="mailto:info@moydus.com"
             >
               <button className="inline-flex items-center justify-center outline-none disabled:pointer-events-none gap-1 font-medium disabled:text-zinc-950/10 dark:disabled:text-white/20 text-[#FF4D00] hover:text-[#FF4D00] dark:hover:text-[#FF4D00] text-xs">
                 <p>Contact support</p>
