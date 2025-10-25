@@ -58,6 +58,8 @@ export async function createOrder(orderData: {
     // Create order in database
     const order = await prisma.order.create({
       data: {
+        orderNumber: `MOY-${Date.now()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`,
+        formEmail: session.user.email,
         userId: session.user.id,
         subscriptionId: orderData.subscriptionId || null,
         stripeSessionId: orderData.stripeSessionId,

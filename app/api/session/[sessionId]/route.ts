@@ -57,7 +57,6 @@ export async function GET(
           name: orderData.customerName || "",
           email: orderData.formEmail || session.customer_details?.email || "",
           company: orderData.companyName || "",
-          phone: orderData.phone || "",
           businessField: orderData.businessField || [],
           selectedAddons: orderData.selectedAddons || [],
           orderNumber: orderData.orderNumber,
@@ -84,10 +83,11 @@ export async function GET(
 
     const responseData = {
       id: session.id,
-      package: session.metadata?.packageName || 
-               session.metadata?.package || 
-               orderData?.packageName || 
-               "Custom Package",
+      package:
+        session.metadata?.packageName ||
+        session.metadata?.package ||
+        orderData?.packageName ||
+        "Custom Package",
       amount: session.amount_total
         ? session.amount_total / 100
         : orderData?.totalPrice || 0,

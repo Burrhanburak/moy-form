@@ -184,18 +184,11 @@ export async function createTools(data: z.infer<typeof toolsSchema>): Promise<{
 
     const checkoutSession = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      line_items: lineItems,
+      line_items:
+        subscriptionLineItems.length > 0
+          ? [...lineItems, ...subscriptionLineItems]
+          : lineItems,
       mode: subscriptionLineItems.length > 0 ? "subscription" : "payment",
-      ...(subscriptionLineItems.length > 0 && {
-        subscription_data: {
-          items: subscriptionLineItems,
-          metadata: {
-            toolId: tool.id,
-            toolName: tool.name,
-            userId: session.user.id,
-          },
-        },
-      }),
       success_url: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/cancel`,
       customer_email: session.user.email,

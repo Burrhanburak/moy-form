@@ -19,14 +19,12 @@ import { X } from "lucide-react";
 interface UploaderButtonProps {
   onClientUploadComplete?: (files: { url?: string; ufsUrl?: string }[]) => void;
   endpoint?: string;
-  defaultImages?: string[]; // 🔹 dışarıdan başlangıç verisi
   onChange?: (urls: string[]) => void; // 🔹 değişiklikleri dışarı bildir
 }
 
 export default function UploaderButton({
   onClientUploadComplete,
   endpoint = "imageUploader",
-  defaultImages = [],
   onChange,
 }: UploaderButtonProps) {
   const [imageData, setImageData] = React.useState<string[]>([]);
@@ -145,7 +143,7 @@ export default function UploaderButton({
                     {/* Upload alanı */}
                     <UploadDropzone
                       className="mt-3 rounded-xl ut-button:bg-white ut-button:text-black ut-button:hover:bg-gray-100 ut-label:text-black ut-allowed-content:text-gray-600 ut-upload-icon:text-black ut-uploading:ut-button:hidden"
-                      endpoint={endpoint as any}
+                      endpoint={endpoint}
                       onClientUploadComplete={handleTempUpload}
                       config={{ mode: "auto" }}
                       appearance={{
@@ -228,7 +226,7 @@ export default function UploaderButton({
           {imageData.length === 0 && (
             <UploadDropzone
               className="mt-0 rounded-xl ut-button:bg-white ut-button:text-black ut-button:hover:bg-gray-100 ut-label:text-black ut-allowed-content:text-gray-600 ut-upload-icon:text-black ut-uploading:ut-button:hidden"
-              endpoint={endpoint as any}
+              endpoint={endpoint}
               onClientUploadComplete={handleInitialUpload}
               config={{ mode: "auto" }}
               appearance={{

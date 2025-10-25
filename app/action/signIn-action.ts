@@ -151,7 +151,6 @@ export async function signInActionMagic(
         success: false,
         error:
           "Bu email adresi ile kayıtlı kullanıcı bulunamadı. Lütfen kayıt olun.",
-        redirectTo: "/signup",
       };
     }
 
@@ -238,10 +237,10 @@ export async function signInwithGoogle(
     // Redirect URL döndüyse, client'a gönder
     if (response && response.url) {
       console.log("🔗 [SERVER] Google auth URL generated:", response.url);
-      return { 
-        success: true, 
+      return {
+        success: true,
         message: "Google'a yönlendiriliyor...",
-        redirectpath: response.url 
+        redirectpath: response.url,
       };
     }
 

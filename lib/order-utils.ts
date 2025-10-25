@@ -38,7 +38,7 @@ export interface CreateOrderData {
   // Package Info
   selectedPackage: string;
   selectedAddons?: string[];
-  packageAnswers?: Record<string, any>;
+  packageAnswers?: Record<string, unknown>;
 
   // Project Details
   projectDescription?: string;

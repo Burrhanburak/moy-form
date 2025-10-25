@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await auth.api.getSession({
@@ -16,7 +16,7 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const packageId = params.id;
+    const { id: packageId } = await params;
 
     console.log(
       `🗑️ Deleting package: ${packageId} by user: ${session.user.id}`

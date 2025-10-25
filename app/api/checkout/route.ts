@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
       name: formData.name,
       email: formData.email,
       phone: formData.phone,
-      // Password will be handled by auth system during signup
+      password: "N/A", // Airtable requires password field
       companyName: formData.companyName,
       businessField: formData.businessField,
       selectedPackage: formData.selectedPackage,
@@ -121,6 +121,10 @@ export async function POST(req: NextRequest) {
           : []),
       selectedAddons: formData.selectedAddons || [],
       maintenanceRequired: true,
+      packageAnswers: formData.packageAnswers || {},
+      hasDomain: formData.hasDomain,
+      hasSocialMedia: formData.hasSocialMedia,
+      socialMediaAccounts: formData.socialMediaAccounts || [],
     };
 
     // Send notifications asynchronously

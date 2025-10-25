@@ -120,13 +120,11 @@ export const verifyEmailWithOTPAction = async (
     }
 
     // Verify email with OTP
-    await auth.api.checkVerificationOTP({
-      body: {
-        email,
-        otp,
-        type: "email-verification",
+    await auth.api.verifyEmail({
+      query: {
+        token: otp,
+        callbackURL: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/dashboard`,
       },
-      headers: await headers(),
     });
 
     return { success: true, error: null };
@@ -221,10 +219,10 @@ export const sendVerificationOTPAction = async (
     }
 
     // Send verification OTP
-    await auth.api.sendVerificationOTP({
+    await auth.api.sendVerificationEmail({
       body: {
         email,
-        type: "email-verification",
+        callbackURL: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/dashboard`,
       },
       headers: await headers(),
     });

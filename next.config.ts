@@ -19,23 +19,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack: (config) => {
-    config.experiments = {
-      ...config.experiments,
-      asyncWebAssembly: true,
-    };
-
-    // Handle ESM packages
-    config.resolve = {
-      ...config.resolve,
-      alias: {
-        ...config.resolve?.alias,
-      },
-    };
-
-    return config;
-  },
   transpilePackages: ["@react-pdf/renderer"],
+  // Turbopack configuration for Next.js 16
+  turbopack: {
+    // Turbopack handles ESM packages automatically
+  },
 };
 
 export default nextConfig;

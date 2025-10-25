@@ -16,10 +16,11 @@ export const stripe = new Stripe(stripeKey, {
   apiVersion: "2025-08-27.basil",
 });
 
-export const createCheckoutSession = async (formData: any) => {
+export const createCheckoutSession = async (
+  formData: Record<string, unknown>
+) => {
   const {
     selectedPackage,
-    additionalServices = [],
     selectedAddons = [],
     maintenanceRequired = false,
     ...customerData
@@ -73,7 +74,8 @@ export const createCheckoutSession = async (formData: any) => {
   }
 
   // Handle subscription data for recurring services
-  let subscriptionLineItems: any[] = [];
+  const subscriptionLineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
+    [];
 
   // Add maintenance - now mandatory for all packages
   if (true) {

@@ -302,11 +302,17 @@ export async function POST(req: Request) {
             // Send notifications
             try {
               await sendSlackNotification({
-                packageName: pkg.name,
-                customerEmail: pkg.user.email,
-                customerName: pkg.user.name,
-                amount: pkg.price / 100,
-                orderNumber: order.orderNumber,
+                name: pkg.user.name,
+                email: pkg.user.email,
+                companyName: pkg.user.name,
+                selectedPackage: pkg.name,
+                businessField: [],
+                selectedAddons: [],
+                maintenanceRequired: true,
+                packageAnswers: {},
+                hasDomain: "false",
+                hasSocialMedia: "false",
+                socialMediaAccounts: [],
               });
               console.log("✅ Slack notification sent");
             } catch (slackError) {
@@ -314,7 +320,19 @@ export async function POST(req: Request) {
             }
 
             try {
-              await sendWelcomeEmail(pkg.user.email, pkg.user.name, pkg.name);
+              await sendWelcomeEmail({
+                name: pkg.user.name,
+                email: pkg.user.email,
+                companyName: pkg.user.name,
+                selectedPackage: pkg.name,
+                businessField: [],
+                selectedAddons: [],
+                maintenanceRequired: true,
+                packageAnswers: {},
+                hasDomain: "false",
+                hasSocialMedia: "false",
+                socialMediaAccounts: [],
+              });
               console.log("✅ Welcome email sent");
             } catch (emailError) {
               console.error("⚠️ Welcome email failed:", emailError);
@@ -639,21 +657,17 @@ export async function POST(req: Request) {
           // Send Slack notification
           try {
             await sendSlackNotification({
-              customerName: order.customerName,
-              customerEmail: formEmail || order.formEmail,
-              customerPhone: order.customerPhone,
-              companyName: order.companyName,
+              name: order.customerName || "",
+              email: formEmail || order.formEmail || "",
+              companyName: order.companyName || "",
               businessField: order.businessField,
-              packageName: order.packageName,
+              selectedPackage: order.packageName,
               selectedAddons: order.selectedAddons,
-              packagePrice: order.packagePrice,
-              addOnsPrice: order.addOnsPrice,
-              totalPrice: order.totalPrice,
-              orderNumber: order.orderNumber,
-              projectDescription: order.projectDescription,
-              specialRequirements: order.specialRequirements,
-              exampleSites: order.exampleSites,
-              additionalNotes: order.additionalNotes,
+              maintenanceRequired: true,
+              packageAnswers: {},
+              hasDomain: "false",
+              hasSocialMedia: "false",
+              socialMediaAccounts: [],
             });
             console.log("✅ Slack notification sent");
           } catch (slackError) {
@@ -662,21 +676,20 @@ export async function POST(req: Request) {
 
           // Send welcome email
           try {
-            await sendWelcomeEmail(formEmail || order.formEmail, {
-              name: order.customerName,
-              companyName: order.companyName,
+            await sendWelcomeEmail({
+              name: order.customerName || "",
+              email: formEmail || order.formEmail || "",
+              companyName: order.companyName || "",
               selectedPackage: order.packageName,
               businessField: order.businessField || [],
               selectedAddons: order.selectedAddons || [],
-              hasDomain: order.hasDomain,
-              domainName: order.domainName,
-              hasSocialMedia: order.hasSocialMedia,
+              maintenanceRequired: true,
+              packageAnswers:
+                (order.packageAnswers as Record<string, string | string[]>) ||
+                {},
+              hasDomain: "false",
+              hasSocialMedia: "false",
               socialMediaAccounts: order.socialMediaAccounts || [],
-              packageAnswers: order.packageAnswers || {},
-              additionalNotes: order.additionalNotes,
-              projectRequirements: order.projectRequirements,
-              totalPrice: order.totalPrice,
-              orderNumber: order.orderNumber,
             });
             console.log("✅ Welcome email sent");
           } catch (emailError) {
@@ -714,13 +727,22 @@ export async function POST(req: Request) {
 
           if (dbSubscription) {
             // Map Stripe status to our enum
-            const status = mapStripeStatus(subscription.status);
+            const status =
+              subscription.status === "active"
+                ? "ACTIVE"
+                : subscription.status === "canceled"
+                  ? "CANCELED"
+                  : subscription.status === "past_due"
+                    ? "PAST_DUE"
+                    : subscription.status === "unpaid"
+                      ? "UNPAID"
+                      : "PENDING";
 
             // Update subscription in database
             await prisma.subscription.update({
               where: { stripeSubscriptionId: subscription.id },
               data: {
-                status,
+                status: status as any,
                 currentPeriodStart: new Date(
                   subscription.current_period_start * 1000
                 ),

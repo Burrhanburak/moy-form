@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { auth } from "@/lib/auth";
 import { z } from "zod";
@@ -19,7 +19,10 @@ const ResetPasswordOTPSchema = z.object({
 export type ForgotPasswordInputs = z.infer<typeof ForgotPasswordSchema>;
 export type ResetPasswordOTPInputs = z.infer<typeof ResetPasswordOTPSchema>;
 
-export const forgotPasswordAction = async (prevState: unknown, formData: FormData) => {
+export const forgotPasswordAction = async (
+  prevState: unknown,
+  formData: FormData
+) => {
   const rawData = {
     email: formData.get("email") as string,
   };
@@ -27,8 +30,8 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
   // Validate input
   const validation = ForgotPasswordSchema.safeParse(rawData);
   if (!validation.success) {
-    return { 
-      error: validation.error.issues[0]?.message || "Geçersiz email" 
+    return {
+      error: validation.error.issues[0]?.message || "Geçersiz email",
     };
   }
 
@@ -42,19 +45,22 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
     });
 
     if (!user) {
-      return { error: "Bu email adresi sistemde kayıtlı değil. Lütfen sistemde kayıtlı email adresinizi giriniz." };
+      return {
+        error:
+          "Bu email adresi sistemde kayıtlı değil. Lütfen sistemde kayıtlı email adresinizi giriniz.",
+      };
     }
 
     // Mock request object for arcjet - Rate limiting
-    const mockRequest = new Request('http://localhost:3000', {
-      method: 'POST',
+    const mockRequest = new Request("http://localhost:3000", {
+      method: "POST",
       headers: await headers(),
     });
-    
+
     // Arcjet protection: Rate limiting + Bot detection
-    const decision = await arcjetSignIn.protect(mockRequest, { 
+    const decision = await arcjetSignIn.protect(mockRequest, {
       email,
-      requested: 1 
+      requested: 1,
     });
 
     console.log("Arcjet decision", decision);
@@ -62,7 +68,9 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
     // Check if request is denied
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
-        return { error: "Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin." };
+        return {
+          error: "Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin.",
+        };
       } else if (decision.reason.isBot()) {
         return { error: "Bot tespit edildi. Erişim reddedildi." };
       } else if (decision.reason.isEmail()) {
@@ -99,7 +107,10 @@ export const forgotPasswordAction = async (prevState: unknown, formData: FormDat
 };
 
 // Send OTP for password reset
-export const sendPasswordResetOTPAction = async (prevState: unknown, formData: FormData) => {
+export const sendPasswordResetOTPAction = async (
+  prevState: unknown,
+  formData: FormData
+) => {
   const rawData = {
     email: formData.get("email") as string,
   };
@@ -107,8 +118,8 @@ export const sendPasswordResetOTPAction = async (prevState: unknown, formData: F
   // Validate input
   const validation = ForgotPasswordSchema.safeParse(rawData);
   if (!validation.success) {
-    return { 
-      error: validation.error.issues[0]?.message || "Geçersiz email" 
+    return {
+      error: validation.error.issues[0]?.message || "Geçersiz email",
     };
   }
 
@@ -126,19 +137,21 @@ export const sendPasswordResetOTPAction = async (prevState: unknown, formData: F
     }
 
     // Arcjet email validation + Rate limiting + Bot detection
-    const mockRequest = new Request('http://localhost:3000', {
-      method: 'POST',
+    const mockRequest = new Request("http://localhost:3000", {
+      method: "POST",
       headers: await headers(),
     });
-    
-    const decision = await arcjetSignIn.protect(mockRequest, { 
+
+    const decision = await arcjetSignIn.protect(mockRequest, {
       email,
-      requested: 1 
+      requested: 1,
     });
 
     if (decision.isDenied()) {
       if (decision.reason.isRateLimit()) {
-        return { error: "Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin." };
+        return {
+          error: "Çok fazla deneme yaptınız. Lütfen daha sonra tekrar deneyin.",
+        };
       } else if (decision.reason.isBot()) {
         return { error: "Bot tespit edildi. Erişim reddedildi." };
       } else if (decision.reason.isEmail()) {
@@ -157,7 +170,7 @@ export const sendPasswordResetOTPAction = async (prevState: unknown, formData: F
     }
 
     // Send OTP for password reset
-    await auth.api.forgetPasswordEmailOTP({
+    await auth.api.forgetPassword({
       body: {
         email,
       },
@@ -175,7 +188,10 @@ export const sendPasswordResetOTPAction = async (prevState: unknown, formData: F
 };
 
 // Reset password with OTP
-export const resetPasswordWithOTPAction = async (prevState: unknown, formData: FormData) => {
+export const resetPasswordWithOTPAction = async (
+  prevState: unknown,
+  formData: FormData
+) => {
   const rawData = {
     email: formData.get("email") as string,
     otp: formData.get("otp") as string,
@@ -185,8 +201,8 @@ export const resetPasswordWithOTPAction = async (prevState: unknown, formData: F
   // Validate input
   const validation = ResetPasswordOTPSchema.safeParse(rawData);
   if (!validation.success) {
-    return { 
-      error: validation.error.issues[0]?.message || "Geçersiz veri" 
+    return {
+      error: validation.error.issues[0]?.message || "Geçersiz veri",
     };
   }
 
@@ -194,13 +210,11 @@ export const resetPasswordWithOTPAction = async (prevState: unknown, formData: F
 
   try {
     // Verify OTP and reset password
-    await auth.api.checkVerificationOTP({
-      body: {
-        email,
-        otp,
-        type: "forget-password",
+    await auth.api.verifyEmail({
+      query: {
+        token: otp,
+        callbackURL: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/reset-password`,
       },
-      headers: await headers(),
     });
 
     // OTP verified, now reset password
@@ -215,27 +229,41 @@ export const resetPasswordWithOTPAction = async (prevState: unknown, formData: F
     return { success: true, error: null };
   } catch (error) {
     console.error("Reset password with OTP error:", error);
-    
+
     // Better error messages for different scenarios
     if (error instanceof Error) {
       const errorMessage = error.message.toLowerCase();
-      
-      if (errorMessage.includes("invalid") || errorMessage.includes("incorrect")) {
-        return { error: "Girdiğiniz kod hatalı. Lütfen email'inizdeki 6 haneli kodu kontrol edin." };
+
+      if (
+        errorMessage.includes("invalid") ||
+        errorMessage.includes("incorrect")
+      ) {
+        return {
+          error:
+            "Girdiğiniz kod hatalı. Lütfen email'inizdeki 6 haneli kodu kontrol edin.",
+        };
       }
-      
+
       if (errorMessage.includes("expired") || errorMessage.includes("expire")) {
-        return { error: "Kodun süresi doldu. Lütfen yeni bir şifre sıfırlama kodu isteyin." };
+        return {
+          error:
+            "Kodun süresi doldu. Lütfen yeni bir şifre sıfırlama kodu isteyin.",
+        };
       }
-      
+
       if (errorMessage.includes("not found")) {
-        return { error: "Kod bulunamadı. Lütfen yeni bir şifre sıfırlama kodu isteyin." };
+        return {
+          error:
+            "Kod bulunamadı. Lütfen yeni bir şifre sıfırlama kodu isteyin.",
+        };
       }
-      
+
       return { error: error.message };
     }
-    
-    return { error: "Şifre sıfırlama başarısız. Kod hatalı veya süresi dolmuş olabilir." };
+
+    return {
+      error:
+        "Şifre sıfırlama başarısız. Kod hatalı veya süresi dolmuş olabilir.",
+    };
   }
 };
-

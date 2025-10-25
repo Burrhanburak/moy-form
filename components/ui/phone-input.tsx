@@ -128,7 +128,7 @@ PhoneInput.displayName = "PhoneInput";
 const InputComponent = React.forwardRef<
   HTMLInputElement,
   React.ComponentProps<"input">
->(({ className, ...props }, ref) => (
+>(({ ...props }, ref) => (
   <CostumInput
     className={cn(
       "w-full h-[50px] min-w-0",
@@ -169,7 +169,9 @@ const CountrySelect = ({
       modal
       onOpenChange={(open) => {
         setIsOpen(open);
-        open && setSearchValue("");
+        if (open) {
+          setSearchValue("");
+        }
       }}
     >
       <PopoverTrigger asChild>

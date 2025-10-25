@@ -166,13 +166,13 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
         const pricing = calculatePackagePrice({
           numberOfPages: values.numberOfPages,
           deliveryTimeInDays: values.deliveryTimeInDays,
-          features: allFeatures,
-          uploadedImages: values.uploadedImages || [],
-          optionalAddons: optionalAddonsArray,
+          features: allFeatures.filter(Boolean) as string[],
+          // uploadedImages: values.uploadedImages || [],
+          optionalAddons: optionalAddonsArray.filter(Boolean) as string[],
           maintenanceRequired: values.maintenanceRequired || false,
           isCustomRequest: true, // Always true
           referenceUrls: referenceUrlsArray,
-          referenceImages: allReferenceImages,
+          referenceImages: allReferenceImages.filter(Boolean) as string[],
         });
 
         console.log("💰 Calculated price:", {
@@ -268,7 +268,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                         </SheetHeader>
                         <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-12rem)] pr-3 flex-1 relative z-10">
                           <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)}>
+                            <form onSubmit={form.handleSubmit(onSubmit as any)}>
                               {/* Basic Info */}
                               <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
                                 Temel Bilgiler
