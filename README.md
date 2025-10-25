@@ -1,4 +1,4 @@
-# 🔄 Moydus Sales Funnel - Complete Implementation
+# 🔄 Moydus
 
 ## 📞 Support
 

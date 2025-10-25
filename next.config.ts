@@ -24,8 +24,18 @@ const nextConfig: NextConfig = {
       ...config.experiments,
       asyncWebAssembly: true,
     };
+
+    // Handle ESM packages
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve?.alias,
+      },
+    };
+
     return config;
   },
+  transpilePackages: ["@react-pdf/renderer"],
 };
 
 export default nextConfig;
