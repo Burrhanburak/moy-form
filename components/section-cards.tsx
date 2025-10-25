@@ -48,8 +48,8 @@ export function SectionCards({
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             {revenueGrowth >= 0
-              ? "Trending up this month"
-              : "Trending down this month"}{" "}
+              ? "Growing steadily"
+              : "No growth yet"}{" "}
             {revenueGrowth >= 0 ? (
               <IconTrendingUp className="size-4" />
             ) : (
@@ -57,7 +57,7 @@ export function SectionCards({
             )}
           </div>
           <div className="text-muted-foreground">
-            Total earnings from all orders
+            Revenue from completed orders
           </div>
         </CardFooter>
       </Card>
@@ -118,8 +118,8 @@ export function SectionCards({
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             {revenueGrowth >= 0
-              ? "Steady performance increase"
-              : "Performance needs attention"}{" "}
+              ? "Business is growing"
+              : "No activity yet"}{" "}
             {revenueGrowth >= 0 ? (
               <IconTrendingUp className="size-4" />
             ) : (
@@ -128,8 +128,8 @@ export function SectionCards({
           </div>
           <div className="text-muted-foreground">
             {revenueGrowth >= 0
-              ? "Meets growth projections"
-              : "Review required"}
+              ? "Based on order activity"
+              : "Complete first order"}
           </div>
         </CardFooter>
       </Card>

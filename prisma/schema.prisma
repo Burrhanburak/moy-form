@@ -25,6 +25,7 @@ model User {
   twoFactorEnabled Boolean @default(false)
   stripeCustomerId String?
   phone            String? // Personal phone (optional)
+  onboardingCompleted Boolean @default(false) // Onboarding tamamlandı mı
   items            Item[]
 
   // Company Information (from form)

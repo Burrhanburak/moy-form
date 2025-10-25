@@ -25,36 +25,31 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useSession, signOut } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export function NavUser() {
+export function NavUser({ user }: { user?: any }) {
   const { isMobile } = useSidebar();
-  const { data: session, isPending, error } = useSession();
   const router = useRouter();
 
-  if (isPending) {
+  if (!user) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
           <SidebarMenuButton size="lg">
-            <div className="h-8 w-8 rounded-lg bg-gray-200 animate-pulse" />
+            <div className="h-8 w-8 rounded-lg bg-red-200 flex items-center justify-center">
+              <IconUserCircle className="h-5 w-5" />
+            </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <div className="h-4 bg-gray-200 rounded animate-pulse mb-1" />
-              <div className="h-3 bg-gray-200 rounded animate-pulse w-2/3" />
+              <span className="text-red-600 font-medium">No Session</span>
+              <span className="text-red-500 text-xs">Please refresh</span>
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
       </SidebarMenu>
     );
   }
-
-  if (!session?.user) {
-    return null;
-  }
-
-  const user = session.user;
 
   const handleSignOut = async () => {
     await signOut({

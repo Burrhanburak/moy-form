@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
 export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  req: NextRequest,
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await auth.api.getSession({
@@ -16,39 +16,52 @@ export async function DELETE(
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { id } = await params;
+    const packageId = params.id;
 
-    // Find package and verify ownership
+    console.log(
+      `🗑️ Deleting package: ${packageId} by user: ${session.user.id}`
+    );
+
+    // Get package to verify ownership and status
     const pkg = await prisma.packages.findUnique({
-      where: { id },
+      where: { id: packageId },
     });
 
     if (!pkg) {
       return NextResponse.json({ error: "Package not found" }, { status: 404 });
     }
 
+    // Only allow deleting own packages
     if (pkg.userId !== session.user.id) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Not authorized to delete this package" },
+        { status: 403 }
+      );
     }
 
-    // Only allow deletion of PENDING packages
+    // Only allow deleting PENDING packages (not paid ones)
     if (pkg.status !== "PENDING") {
       return NextResponse.json(
-        { error: "Only PENDING packages can be deleted" },
+        {
+          error: `Cannot delete ${pkg.status} package. Only PENDING packages can be deleted.`,
+        },
         { status: 400 }
       );
     }
 
     // Delete the package
     await prisma.packages.delete({
-      where: { id },
+      where: { id: packageId },
     });
 
-    console.log(`✅ Deleted PENDING package: ${id}`);
+    console.log(`✅ Package deleted: ${packageId}`);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      message: "Package deleted successfully",
+    });
   } catch (error) {
-    console.error("Error deleting package:", error);
+    console.error("❌ Error deleting package:", error);
     return NextResponse.json(
       { error: "Failed to delete package" },
       { status: 500 }

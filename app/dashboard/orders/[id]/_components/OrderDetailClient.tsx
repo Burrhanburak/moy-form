@@ -711,8 +711,8 @@ export default function OrderDetailClient({ order }: OrderDetailClientProps) {
           <div className="w-full rounded-xl border border-gray-200 bg-white p-6 dark:border-[#313131] dark:bg-[#171719] lg:rounded-2xl">
             <div className="flex flex-row items-center gap-4">
               <div className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#313131] bg-gray-50 text-sm dark:border-[#313131] dark:bg-[#171719]">
-                <div className="absolute inset-0 flex items-center justify-center bg-transparent">
-                  <span>
+                <div className="absolute inset-0 flex items-center justify-center bg-transparent dark:bg-[#171719]">
+                  <span className="dark:text-white">
                     {order.customerName
                       ? order.customerName.charAt(0).toUpperCase()
                       : "U"}
@@ -720,14 +720,16 @@ export default function OrderDetailClient({ order }: OrderDetailClientProps) {
                 </div>
               </div>
               <div className="flex flex-col">
-                <p>{order.customerName || "Unknown Customer"}</p>
+                <p className="dark:text-white">
+                  {order.customerName || "Unknown Customer"}
+                </p>
                 <div className="flex flex-row items-center gap-1 text-sm text-gray-500 dark:text-gray-500">
                   {order.formEmail || "No email"}
                 </div>
               </div>
             </div>
             <div className="flex flex-row justify-between gap-4 mt-4">
-              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 px-4 py-3 text-sm dark:bg-[#313131]">
+              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 px-4 border border-gray-200 dark:border-[#313131] py-3 text-sm dark:bg-transparent">
                 <span className="text-gray-500 dark:text-gray-500">
                   Total Revenue
                 </span>
@@ -737,27 +739,27 @@ export default function OrderDetailClient({ order }: OrderDetailClientProps) {
                   </div>
                 </span>
               </div>
-              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 px-4 py-3 text-sm dark:bg-[#313131]">
+              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 border border-gray-200 dark:border-[#313131] px-4 py-3 text-sm dark:bg-transparent">
                 <span className="text-gray-500 dark:text-gray-500">
                   Order Date
                 </span>
                 <span>{formatDate(order.createdAt)}</span>
               </div>
             </div>
-            <div className="flex flex-col gap-4 mt-4">
+            {/* <div className="flex flex-col gap-4 mt-4">
               <div className="">
                 <Link
                   href={`mailto:${order.formEmail}`}
                   className="w-1/2 text-blue-500 dark:text-blue-400"
                 >
-                  <button className="flex w-full items-center justify-center rounded-2xl border border-black/10 bg-gray-100 px-5 py-4 text-sm font-medium text-black transition-colors  dark:border-white/10 dark:bg-[#313131] dark:text-white ">
+                  <button className="flex w-full items-center justify-center rounded-2xl border border-black/10 bg-gray-100 px-5 py-4 text-sm font-medium text-black transition-colors  dark:border-white/10 dark:bg-transparent dark:text-white ">
                     <div className="flex flex-row text-xs md:text-sm items-center">
                       Send Email
                     </div>
                   </button>
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

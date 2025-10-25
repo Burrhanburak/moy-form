@@ -29,9 +29,23 @@ export async function getUserProfile() {
       emailVerified: true,
       twoFactorEnabled: true,
       createdAt: true,
+      accounts: {
+        select: {
+          providerId: true,
+        },
+      },
     },
   });
-  return user;
+  
+  if (!user) return null;
+
+  // Provider bilgisini hesapla
+  const provider = user.accounts.length > 0 ? user.accounts[0].providerId : "email";
+  
+  return {
+    ...user,
+    provider,
+  };
 }
 
 export async function updateUserProfile(
@@ -48,9 +62,14 @@ export async function updateUserProfile(
     socialMedia: formData.get("socialMedia") || "",
   };
 
+  console.log("Form data received:", formDataObject);
+  console.log("Social media from form:", formDataObject.socialMedia);
+
   const result = userProfileSchema.safeParse(formDataObject);
-  if (!result.success)
+  if (!result.success) {
+    console.log("Validation error:", result.error.issues);
     return { error: result.error.issues[0].message, success: false };
+  }
 
   // Parse social media if it's a JSON string
   let socialMediaData = null;
@@ -76,8 +95,24 @@ export async function updateUserProfile(
     },
   });
 
+  // Get updated user data to return
+  const updatedUser = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      image: true,
+      website: true,
+      socialMedia: true,
+      emailVerified: true,
+      twoFactorEnabled: true,
+      createdAt: true,
+    },
+  });
+
   revalidatePath("/dashboard/settings");
-  return { success: true, message: "Profile updated successfully" };
+  return { success: true, message: "Profile updated successfully", user: updatedUser };
 }
 
 const changePasswordSchema = z
@@ -143,4 +178,22 @@ export async function DeleteUser() {
 
   revalidatePath("/dashboard/settings");
   return { success: true, message: "Kullanıcı başarıyla silindi" };
+}
+
+export async function updateUserImage(url: string) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return { redirect: "/login" };
+
+  if (!url || typeof url !== "string") {
+    return { success: false, error: "Invalid image URL" };
+  }
+
+  await prisma.user.update({
+    where: { id: session.user.id },
+    data: { image: url },
+  });
+
+  // Profil sayfasını yeniden valide et
+  revalidatePath("/dashboard/settings");
+  return { success: true, message: "Profile image updated successfully" };
 }

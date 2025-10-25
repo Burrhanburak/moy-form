@@ -221,7 +221,7 @@ export async function createPackage(
         ],
         mode: "payment",
         success_url: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/cancel`,
+        cancel_url: `${process.env.NEXT_PUBLIC_URL || "http://localhost:3000"}/cancel?source=custom_package&packageId=${pkg.id}`,
         customer_email: session.user.email,
         metadata: {
           packageId: pkg.id,
@@ -315,6 +315,7 @@ export async function getPackages() {
     const packages = await prisma.packages.findMany({
       where: {
         userId: session.user.id, // Sadece kullanıcının kendi paketleri
+        status: "ACTIVE", // Sadece aktif paketleri göster (PENDING olanları değil)
       },
       select: {
         id: true,

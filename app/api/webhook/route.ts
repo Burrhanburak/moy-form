@@ -26,8 +26,17 @@ async function updateOrderWithStripeSession(
 }
 
 export async function POST(req: Request) {
+  console.log("🚨 ============================================");
+  console.log("🚨 WEBHOOK ENDPOINT HIT!");
+  console.log("🚨 ============================================");
+
   const sig = req.headers.get("stripe-signature");
   const body = await req.text();
+
+  console.log("📋 Headers:", {
+    signature: sig ? "EXISTS" : "MISSING",
+    contentType: req.headers.get("content-type"),
+  });
 
   try {
     let event;
@@ -38,17 +47,26 @@ export async function POST(req: Request) {
       event = JSON.parse(body);
     } else {
       if (!sig) {
+        console.log("❌ No signature found!");
         return new NextResponse("No signature", { status: 400 });
       }
+
+      console.log("🔐 Verifying webhook signature...");
+      console.log(
+        "🔑 Using secret:",
+        process.env.STRIPE_WEBHOOK_SECRET ? "SET" : "MISSING"
+      );
 
       event = stripe.webhooks.constructEvent(
         body,
         sig,
         process.env.STRIPE_WEBHOOK_SECRET!
       );
+
+      console.log("✅ Signature verified!");
     }
 
-    console.log(`Received webhook: ${event.type}`);
+    console.log(`📨 Received webhook: ${event.type}`);
     console.log("🔍 Full event data:", JSON.stringify(event, null, 2));
 
     switch (event.type) {
@@ -687,13 +705,70 @@ export async function POST(req: Request) {
       case "customer.subscription.updated": {
         const subscription = event.data.object;
         console.log("🔄 Subscription updated:", subscription.id);
-        // Handle subscription changes
+
+        try {
+          // Find subscription in database
+          const dbSubscription = await prisma.subscription.findUnique({
+            where: { stripeSubscriptionId: subscription.id },
+          });
+
+          if (dbSubscription) {
+            // Map Stripe status to our enum
+            const status = mapStripeStatus(subscription.status);
+
+            // Update subscription in database
+            await prisma.subscription.update({
+              where: { stripeSubscriptionId: subscription.id },
+              data: {
+                status,
+                currentPeriodStart: new Date(
+                  subscription.current_period_start * 1000
+                ),
+                currentPeriodEnd: new Date(
+                  subscription.current_period_end * 1000
+                ),
+                cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
+                canceledAt: subscription.canceled_at
+                  ? new Date(subscription.canceled_at * 1000)
+                  : null,
+              },
+            });
+            console.log(`✅ Subscription updated in DB: ${subscription.id}`);
+          } else {
+            console.log(`⚠️ Subscription not found in DB: ${subscription.id}`);
+          }
+        } catch (error) {
+          console.error("❌ Error updating subscription:", error);
+        }
         break;
       }
       case "customer.subscription.deleted": {
         const subscription = event.data.object;
         console.log("🗑️ Subscription cancelled:", subscription.id);
-        // Handle subscription cancellation
+
+        try {
+          // Update subscription status to CANCELED
+          const dbSubscription = await prisma.subscription.findUnique({
+            where: { stripeSubscriptionId: subscription.id },
+          });
+
+          if (dbSubscription) {
+            await prisma.subscription.update({
+              where: { stripeSubscriptionId: subscription.id },
+              data: {
+                status: "CANCELED",
+                canceledAt: new Date(),
+              },
+            });
+            console.log(
+              `✅ Subscription marked as canceled in DB: ${subscription.id}`
+            );
+          } else {
+            console.log(`⚠️ Subscription not found in DB: ${subscription.id}`);
+          }
+        } catch (error) {
+          console.error("❌ Error canceling subscription:", error);
+        }
         break;
       }
       default:

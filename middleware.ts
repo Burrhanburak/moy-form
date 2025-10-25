@@ -85,7 +85,14 @@ async function customMiddleware(req: NextRequest) {
   }
 
   // /onboarding ve altındaki tüm sayfalar login gerektiriyor
+  // Ama Google callback sonrası bir süre bekle (session henüz oluşmamış olabilir)
   if (nextUrl.pathname.startsWith("/onboarding") && !isLoggedIn) {
+    // Google callback'ten geliyorsa kısa süre bekle
+    const referer = req.headers.get('referer');
+    if (referer && referer.includes('accounts.google.com')) {
+      console.log("🔄 Google callback detected, allowing onboarding access");
+      return NextResponse.next();
+    }
     return NextResponse.redirect(new URL("/login", req.url));
   }
 

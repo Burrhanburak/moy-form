@@ -143,12 +143,12 @@ const data = {
     // },
     {
       name: "Create Package",
-      url: "/dashboard/benefits/create-package",
+      url: "/dashboard/create-package",
       icon: IconPlus,
     },
     {
       name: "Create Tools",
-      url: "/dashboard/benefits/create-tools",
+      url: "/dashboard/create-tools",
       icon: IconFileAi,
     },
   ],
@@ -196,7 +196,7 @@ const data = {
   // ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ user, ...props }: React.ComponentProps<typeof Sidebar> & { user?: any }) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -227,7 +227,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   );

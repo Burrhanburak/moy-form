@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect } from "react";
 import { UploadDropzone } from "@/utils/uploadthing";
 import Image from "next/image";
@@ -20,73 +19,84 @@ import { X } from "lucide-react";
 interface UploaderButtonProps {
   onClientUploadComplete?: (files: { url?: string; ufsUrl?: string }[]) => void;
   endpoint?: string;
-  setImageData: (images: string[]) => void;
-  imageData: string[] | undefined; // undefined olabilir, güvenli ele alacağız
+  defaultImages?: string[]; // 🔹 dışarıdan başlangıç verisi
+  onChange?: (urls: string[]) => void; // 🔹 değişiklikleri dışarı bildir
 }
 
 export default function UploaderButton({
   onClientUploadComplete,
   endpoint = "imageUploader",
-  setImageData,
-  imageData,
+  defaultImages = [],
+  onChange,
 }: UploaderButtonProps) {
+  const [imageData, setImageData] = React.useState<string[]>([]);
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [tempImages, setTempImages] = React.useState<string[]>([]);
   const MAX_IMAGES = 5;
 
-  // Güvenli imageData (undefined ise boş dizi)
-  const safeImageData = imageData || [];
+  // ✅ Sadece ilk mount'ta localStorage'dan oku
+  useEffect(() => {
+    const saved = localStorage.getItem("uploaded_images");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setImageData(parsed);
+      } catch (error) {
+        console.error("Failed to parse saved images:", error);
+      }
+    }
+  }, []); // Sadece ilk mount'ta
 
-  // İlk yükleme
+  // ✅ imageData değişince localStorage'a kaydet ve parent'a bildir
+  useEffect(() => {
+    if (imageData.length > 0 || imageData.length === 0) {
+      localStorage.setItem("uploaded_images", JSON.stringify(imageData));
+      onChange?.(imageData);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageData]); // Sadece imageData değişince
+
+  // ✅ İlk yükleme
   const handleInitialUpload = (files: { url?: string; ufsUrl?: string }[]) => {
-    const totalCount = safeImageData.length + files.length;
+    const totalCount = imageData.length + files.length;
     if (totalCount > MAX_IMAGES) {
       toast.error(`You can upload up to ${MAX_IMAGES} images only.`);
       return;
     }
-
     const newUrls = files.map((file) => file.ufsUrl || file.url || "");
-    setImageData((prev) => {
-      const updated = [...(prev || []), ...newUrls];
-      console.log("📸 Initial upload updated imageData:", updated); // Hata ayıkla
-      return updated;
-    });
-    if (onClientUploadComplete) onClientUploadComplete(newUrls);
+    const updated = [...imageData, ...newUrls];
+    setImageData(updated);
+    onClientUploadComplete?.(files);
     toast.success(`${files.length} file(s) uploaded successfully!`);
   };
 
-  // AlertDialog içindeki geçici yükleme
+  // ✅ AlertDialog içi geçici yükleme
   const handleTempUpload = (files: { url?: string; ufsUrl?: string }[]) => {
     const totalCount = tempImages.length + files.length;
     if (totalCount > MAX_IMAGES) {
       toast.error(`You can upload up to ${MAX_IMAGES} images only.`);
       return;
     }
-
     const newUrls = files.map((file) => file.ufsUrl || file.url || "");
     setTempImages((prev) => [...prev, ...newUrls]);
     toast.success(`${files.length} file(s) uploaded successfully!`);
   };
 
-  // Görselleri değiştir
+  // ✅ Görselleri değiştir
   const confirmReplaceImages = () => {
     setImageData(tempImages);
     setTempImages([]);
-    toast.success("Images replaced successfully!");
     setDialogOpen(false);
+    toast.success("Images replaced successfully!");
   };
 
-  // Görsel sil
+  // ✅ Görsel sil
   const removeImage = (index: number) => {
-    setImageData((prev) => {
-      const updated = (prev || []).filter((_, i) => i !== index);
-      console.log("📸 Removed image, updated imageData:", updated); // Hata ayıkla
-      return updated;
-    });
+    setImageData((prev) => prev.filter((_, i) => i !== index));
     toast.success("Image removed successfully!");
   };
 
-  // Tüm görselleri temizle
+  // ✅ Tüm görselleri temizle
   const clearAllImages = () => {
     setImageData([]);
     toast.success("All images cleared!");
@@ -97,12 +107,14 @@ export default function UploaderButton({
       <div className="w-full bg-white dark:bg-zinc-950 border border-gray-300 dark:border-[#313131] rounded-xl p-4 transition-colors">
         <div className="space-y-3">
           {/* Header */}
-          {safeImageData.length > 0 && (
+          {imageData.length > 0 && (
             <div className="flex items-center justify-between mb-2">
               <span className="text-black dark:text-white text-sm">
-                {safeImageData.length} image(s) uploaded
+                {imageData.length} image(s) uploaded
               </span>
+
               <div className="flex items-center justify-center gap-2">
+                {/* Yeniden Yükle */}
                 <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
                   <AlertDialogTrigger asChild>
                     <button
@@ -112,6 +124,7 @@ export default function UploaderButton({
                       Yeniden Yükle
                     </button>
                   </AlertDialogTrigger>
+
                   <AlertDialogContent className="fixed left-1/2 top-1/2 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white dark:bg-[#1c1c1c] p-6 shadow-lg border border-gray-200 dark:border-gray-700">
                     <button
                       onClick={() => setDialogOpen(false)}
@@ -120,6 +133,7 @@ export default function UploaderButton({
                     >
                       <X size={18} />
                     </button>
+
                     <AlertDialogHeader>
                       <AlertDialogTitle>Yeni görseller yükle</AlertDialogTitle>
                       <AlertDialogDescription>
@@ -127,6 +141,8 @@ export default function UploaderButton({
                         tamamlanınca “Değiştir” butonuna bas.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
+
+                    {/* Upload alanı */}
                     <UploadDropzone
                       className="mt-3 rounded-xl ut-button:bg-white ut-button:text-black ut-button:hover:bg-gray-100 ut-label:text-black ut-allowed-content:text-gray-600 ut-upload-icon:text-black ut-uploading:ut-button:hidden"
                       endpoint={endpoint as any}
@@ -142,6 +158,7 @@ export default function UploaderButton({
                         uploadIcon: "text-black dark:text-white",
                       }}
                     />
+
                     {tempImages.length > 0 && (
                       <div className="grid grid-cols-2 gap-3 mt-3">
                         {tempImages.map((url, index) => (
@@ -156,6 +173,7 @@ export default function UploaderButton({
                         ))}
                       </div>
                     )}
+
                     <AlertDialogFooter className="pt-4">
                       <AlertDialogCancel className="rounded-md">
                         Vazgeç
@@ -169,6 +187,8 @@ export default function UploaderButton({
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
+
+                {/* Tümünü Sil */}
                 <button
                   type="button"
                   onClick={clearAllImages}
@@ -181,9 +201,9 @@ export default function UploaderButton({
           )}
 
           {/* Görseller */}
-          {safeImageData.length > 0 && (
+          {imageData.length > 0 && (
             <div className="grid grid-cols-2 gap-3">
-              {safeImageData.map((url, index) => (
+              {imageData.map((url, index) => (
                 <div key={index} className="relative group">
                   <Image
                     src={url}
@@ -205,7 +225,7 @@ export default function UploaderButton({
           )}
 
           {/* İlk yükleme */}
-          {safeImageData.length === 0 && (
+          {imageData.length === 0 && (
             <UploadDropzone
               className="mt-0 rounded-xl ut-button:bg-white ut-button:text-black ut-button:hover:bg-gray-100 ut-label:text-black ut-allowed-content:text-gray-600 ut-upload-icon:text-black ut-uploading:ut-button:hidden"
               endpoint={endpoint as any}

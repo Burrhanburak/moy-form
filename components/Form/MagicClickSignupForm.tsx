@@ -135,7 +135,9 @@ export function MagicClickSignupForm({
               </div>
               <div className="grow h-px bg-[#999999]/10 dark:bg-white/10"></div>
             </div>
-            <GoogleButton href="/signIn" />
+            <GoogleButton redirectTo="/onboarding" mode="signup">
+              Sign up with Google
+            </GoogleButton>
           </form>
 
           <div className="mt-4 text-center text-black dark:text-white flex items-center justify-center gap-2 text-sm">

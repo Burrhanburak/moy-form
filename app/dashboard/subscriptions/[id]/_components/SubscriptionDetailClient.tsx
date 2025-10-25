@@ -667,7 +667,7 @@ export default function SubscriptionDetailClient({
               </div>
             </div>
             <div className="flex flex-row justify-between gap-4 mt-4">
-              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 px-4 py-3 text-sm dark:bg-[#313131]">
+              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 border border-gray-200 dark:border-[#313131] px-4 py-3 text-sm dark:bg-transparent">
                 <span className="text-gray-500 dark:text-gray-500">
                   Monthly Revenue
                 </span>
@@ -677,7 +677,7 @@ export default function SubscriptionDetailClient({
                   </div>
                 </span>
               </div>
-              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 px-4 py-3 text-sm dark:bg-[#313131]">
+              <div className="flex flex-1 flex-col gap-1 rounded-lg bg-gray-100 px-4 border border-gray-200 dark:border-[#313131] py-3 text-sm dark:bg-transparent">
                 <span className="text-gray-500 dark:text-gray-500">
                   Next Billing
                 </span>
@@ -688,18 +688,18 @@ export default function SubscriptionDetailClient({
                 </span>
               </div>
             </div>
-            <div className="flex flex-col gap-4 mt-4">
+            {/* <div className="flex flex-col gap-4 mt-4">
               <div className="gap-4">
                 <a
                   href={`mailto:${subscription.customerEmail}`}
                   className="w-1/2 text-blue-500 dark:text-blue-400"
                 >
-                  <button className="flex w-full items-center justify-center rounded-2xl border border-black/10 bg-gray-100 px-5 py-4 text-sm font-medium text-black transition-colors  dark:border-white/10 dark:bg-[#313131] dark:text-white ">
+                  <button className="flex w-full items-center justify-center rounded-2xl border border-black/10 bg-gray-100 px-5 py-4 text-sm font-medium text-black transition-colors  dark:border-white/10 dark:bg-transparent dark:text-white ">
                     <div className=" items-center">Send Email</div>
                   </button>
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

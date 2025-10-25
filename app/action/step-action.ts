@@ -318,6 +318,13 @@ export async function summaryStep(
     // TODO: Save data to a database or session
     // Example: await db.onboarding.update({ userId, step5: data });
 
+    // Mark onboarding as completed before checkout
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { onboardingCompleted: true },
+    });
+    console.log("✅ Onboarding marked as completed for user:", user.id);
+
     // Call checkout API
     try {
       const data = Object.fromEntries(formData);

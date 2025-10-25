@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { arcjetSignUp } from "@/lib/arcjet";
 import { z } from "zod";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 // import { linkOrderToUser } from "@/lib/order-utils";
 // const SignUpSchema = z.object({
 //   email: z.string().email(),
@@ -418,6 +419,59 @@ export async function signUpActionMagic(
     return {
       success: false,
       error: "Magic link gönderilemedi. Lütfen tekrar deneyin.",
+    };
+  }
+}
+
+export async function signUpWithGoogle(
+  prevState: { success: boolean; message?: string; error?: string } | null,
+  formData: FormData
+): Promise<{
+  success: boolean;
+  message?: string;
+  error?: string;
+  redirectpath?: string;
+}> {
+  console.log("🟢 [SERVER] signUpWithGoogle called");
+
+  try {
+    const provider = formData.get("provider");
+    if (provider !== "google") {
+      return { success: false, error: "Invalid provider" };
+    }
+    if (!provider) {
+      return { success: false, error: "Provider not found." };
+    }
+
+    // Google social auth - email kontrolü Google callback'te yapılır
+
+    // Google signup işlemi - bu Google auth URL'i döner
+    const response = await auth.api.signInSocial({
+      body: {
+        provider: "google",
+        callbackURL: "/onboarding", // kayıt sonrası yönlendirme
+      },
+      headers: await headers(),
+    });
+
+    // Redirect URL döndüyse, client'a gönder
+    if (response && response.url) {
+      console.log("🔗 [SERVER] Google auth URL generated:", response.url);
+      return { 
+        success: true, 
+        message: "Google'a yönlendiriliyor...",
+        redirectpath: response.url 
+      };
+    }
+
+    // Bu satıra gelmemeli
+    console.log("❌ [SERVER] No redirect URL received");
+    return { success: false, error: "Google auth URL alınamadı." };
+  } catch (error) {
+    console.error("🔴 [SERVER] Error in signUpWithGoogle:", error);
+    return {
+      success: false,
+      error: "Google ile kayıt yapılırken bir hata oluştu.",
     };
   }
 }

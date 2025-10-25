@@ -703,7 +703,7 @@ function CreateToolsClient({ tools }: CreateToolsProps) {
                 {tools.map((pkg) => (
                   <Link
                     key={pkg.id}
-                    href={`/dashboard/benefits/create-tools/${pkg.id}`}
+                    href={`/dashboard/create-tools/${pkg.id}`}
                     className="px-4 py-2 text-left hover:bg-gray-100 rounded-xl dark:hover:bg-[#313131] w-full block mb-2 flex flex-row items-center gap-2 "
                   >
                     <span className=" flex h-6 w-6 shrink-0 flex-row items-center justify-center rounded-full  dark:bg-[#313131] text-2xl text-black dark:text-white">

@@ -1,13 +1,10 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger } from "@/components/ui/sidebar"
+import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
-import NextBreadcrumb from "./DynamicBreadcrumb"
-import { ModeToggle } from "./mode-toggle"
-import { DashboardCommandMenu } from "./dashboard-command-menu"
-
+import NextBreadcrumb from "./DynamicBreadcrumb";
+import { ModeToggle } from "./mode-toggle";
 
 export function SiteHeader() {
   return (
@@ -19,9 +16,12 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         <h1 className="text-base font-medium">
-          <NextBreadcrumb homeElement="Dashboard" separator="/" capitalizeLinks={true} />
+          <NextBreadcrumb
+            homeElement="Dashboard"
+            separator="/"
+            capitalizeLinks={true}
+          />
         </h1>
-      
 
         <div className="ml-auto flex items-center gap-1">
           {/* <Button variant="ghost" asChild size="sm" className="hidden sm:flex">
@@ -34,11 +34,11 @@ export function SiteHeader() {
               GitHub
             </a>
           </Button> */}
-          
+
           {/* <DashboardCommandMenu/> */}
           <ModeToggle />
         </div>
       </div>
     </header>
-  )
+  );
 }

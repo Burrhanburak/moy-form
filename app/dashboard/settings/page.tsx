@@ -1,4 +1,3 @@
-
 import { getUserProfile } from "@/app/action/user-action";
 import SettingsClient from "./_components/SettingsClient";
 

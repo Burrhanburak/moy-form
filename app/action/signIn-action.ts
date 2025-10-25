@@ -5,6 +5,7 @@ import { z } from "zod";
 import { headers } from "next/headers";
 import { arcjetSignIn } from "@/lib/arcjet";
 import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 // import { trackEvent } from "@/lib/trackEvent"; // Removed - client-side only
 
 // const SignInSchema = z.object({
@@ -207,5 +208,51 @@ export async function signInActionMagic(
     }
     console.log("🔴 [SERVER] Unknown error");
     return { success: false, error: "Beklenmeyen bir hata oluştu." };
+  }
+}
+
+export async function signInwithGoogle(
+  prevState: { success: boolean; message?: string; error?: string } | null,
+  formData: FormData
+): Promise<{
+  success: boolean;
+  message?: string;
+  error?: string;
+  redirectpath?: string;
+}> {
+  console.log("🟢 [SERVER] HandlewithGoogle called");
+
+  try {
+    const provider = formData.get("provider");
+
+    if (!provider) {
+      return { success: false, error: "Provider not found." };
+    }
+
+    // Google social auth - user kontrolü Google callback'te yapılır
+    const response = await auth.api.signInSocial({
+      body: { provider: "google", callbackURL: "/dashboard" },
+      headers: await headers(),
+    });
+
+    // Redirect URL döndüyse, client'a gönder
+    if (response && response.url) {
+      console.log("🔗 [SERVER] Google auth URL generated:", response.url);
+      return { 
+        success: true, 
+        message: "Google'a yönlendiriliyor...",
+        redirectpath: response.url 
+      };
+    }
+
+    // Bu satıra gelmemeli
+    console.log("❌ [SERVER] No redirect URL received");
+    return { success: false, error: "Google auth URL alınamadı." };
+  } catch (error) {
+    console.error("🔴 [SERVER] Error in HandlewithGoogle:", error);
+    return {
+      success: false,
+      error: "Google ile giriş yapılırken bir hata oluştu.",
+    };
   }
 }

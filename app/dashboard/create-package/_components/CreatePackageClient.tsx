@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Sheet,
   SheetContent,
@@ -110,6 +110,14 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
     setError(undefined);
   };
 
+  // ✅ useCallback ile onChange'i memoize et - sonsuz döngüyü önler
+  const handleImageChange = useCallback(
+    (urls: string[]) => {
+      form.setValue("uploadedImages", urls, { shouldValidate: true });
+    },
+    [form]
+  );
+
   // Real-time price calculation
   useEffect(() => {
     const subscription = form.watch((values) => {
@@ -159,6 +167,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
           numberOfPages: values.numberOfPages,
           deliveryTimeInDays: values.deliveryTimeInDays,
           features: allFeatures,
+          uploadedImages: values.uploadedImages || [],
           optionalAddons: optionalAddonsArray,
           maintenanceRequired: values.maintenanceRequired || false,
           isCustomRequest: true, // Always true
@@ -477,6 +486,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                   </label>
                                   <UploaderButton
                                     endpoint="imageUploader"
+                                    onChange={handleImageChange}
                                     onClientUploadComplete={(files) => {
                                       const urls = files.map(
                                         (f) => f.ufsUrl || f.url || ""
@@ -489,14 +499,12 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                                       ]);
                                     }}
                                   />
-                                  {form.watch("uploadedImages") &&
-                                    form.watch("uploadedImages")!.length >
-                                      0 && (
-                                      <p className="text-xs text-green-600 dark:text-green-400">
-                                        ✓ {form.watch("uploadedImages")!.length}{" "}
-                                        görsel yüklendi
-                                      </p>
-                                    )}
+                                  {form.watch("uploadedImages")?.length > 0 && (
+                                    <p className="text-xs text-green-600 dark:text-green-400">
+                                      ✓ {form.watch("uploadedImages")!.length}{" "}
+                                      görsel yüklendi
+                                    </p>
+                                  )}
                                 </div>
 
                                 <FormField
@@ -942,7 +950,7 @@ function CreatePackageClient({ packages }: CreatePackageProps) {
                 {packages.map((pkg) => (
                   <Link
                     key={pkg.id}
-                    href={`/dashboard/benefits/create-package/${pkg.id}`}
+                    href={`/dashboard/create-package/${pkg.id}`}
                     className="px-4 py-2 text-left hover:bg-gray-100 rounded-xl dark:hover:bg-[#202020] w-full block mb-2 flex flex-row items-center gap-2"
                   >
                     <span className=" flex h-6 w-6 shrink-0 flex-row items-center justify-center rounded-full  dark:bg-[#313131] text-2xl text-black dark:text-white">
