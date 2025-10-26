@@ -7,7 +7,6 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "@/server/uploadthing";
 import SegmentProvider from "@/components/providers/segment-provider";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Analytics } from "@vercel/analytics/next";
 const inter = Inter({
   variable: "--font-inter",
@@ -49,10 +48,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {/* <ModeToggle /> */}
+          <SegmentProvider />
           <Analytics />
-          {children}
           <Toaster />
+          {children}
         </ThemeProvider>
       </body>
     </html>
