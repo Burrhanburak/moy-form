@@ -1,0 +1,402 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String  @id
+  name                String // Personal name from signup
+  email               String // Personal email from signup
+  emailVerified       Boolean @default(false)
+  image               String?
+  website             String? @default("")
+  socialMedia         String? @default("")
+  twoFactorEnabled    Boolean @default(false)
+  stripeCustomerId    String?
+  phone               String? // Personal phone (optional)
+  onboardingCompleted Boolean @default(false) // Onboarding tamamlandı mı
+  items               Item[]
+
+  // Company Information (from form)
+  companyName  String? // Company name (optional)
+  companyEmail String? // Company email (optional) 
+
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+  sessions       Session[]
+  accounts       Account[]
+  feedbacks      Feedback[]
+  packages       Packages[]
+  tools          Tools[]
+  supportTickets SupportTicket[]
+  subscriptions  Subscription[]
+  orders         Order[]
+
+  @@unique([email])
+  @@unique([stripeCustomerId])
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @default(now()) @updatedAt
+
+  @@map("verification")
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  feedback  String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("feedback")
+}
+
+model Packages {
+  id                  String        @id @default(cuid())
+  name                String
+  price               Int
+  description         String
+  features            String[]
+  optionalAddons      String[]
+  maintenanceRequired Boolean
+  maintenancePrice    String
+  status              PackageStatus @default(PENDING) // Payment status
+
+  orders Order[]
+
+  subscriptions      Subscription[] // ← bunu ekledik
+  // Site package specific fields
+  numberOfPages      Int? // Kaç sayfalık site
+  referenceImages    String[] // Referans görseller URLs
+  referenceUrls      String[] // Beğendiği site örnekleri
+  priceRangeMin      Int? // Minimum budget
+  priceRangeMax      Int? // Maximum budget
+  revisionCount      Int? // Kaç revizyon hakkı
+  deliveryTimeInDays Int? // Kaç günde teslim
+  specialNotes       String? // Özel istekler ve notlar
+  isCustomRequest    Boolean        @default(false) // Özel paket talebi mi?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("packages")
+}
+
+enum PackageStatus {
+  PENDING // Waiting for payment
+  ACTIVE // Payment completed
+  CANCELED // Payment failed or canceled
+}
+
+model Tools {
+  id                  String   @id @default(cuid())
+  name                String
+  price               Int
+  description         String
+  features            String[]
+  optionalAddons      String[]
+  maintenanceRequired Boolean
+  maintenancePrice    String
+
+  // n8n Automation specific fields
+  automationType      String? // "workflow", "integration", "data-processing", "notification", "custom"
+  triggerType         String? // "webhook", "schedule", "manual", "event-based"
+  integrations        String[] // ["slack", "google-sheets", "zapier", "api"]
+  complexity          String? // "simple", "medium", "complex", "enterprise"
+  executionFrequency  String? // "real-time", "hourly", "daily", "weekly", "on-demand"
+  dataVolume          String? // "low", "medium", "high", "enterprise"
+  customRequirements  String? // Özel gereksinimler
+  apiConnections      Int? // Kaç API bağlantısı
+  webhookEndpoints    Int? // Kaç webhook endpoint
+  dataTransformations Int? // Kaç veri dönüşümü
+  errorHandling       Boolean  @default(false) // Hata yönetimi var mı
+  monitoring          Boolean  @default(false) // Monitoring var mı
+  backupStrategy      String? // Backup stratejisi
+  documentation       String? // Dokümantasyon dahil mi
+  trainingIncluded    Boolean  @default(false) // Eğitim dahil mi
+  supportLevel        String? // "basic", "standard", "premium", "enterprise"
+
+  // Technical specifications
+  technicalNotes     String? // Teknik notlar
+  testingIncluded    Boolean @default(false) // Test dahil mi
+  deploymentType     String? // "cloud", "on-premise", "hybrid"
+  scalabilityOptions String? // Ölçeklenebilirlik seçenekleri
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tools")
+}
+
+model SupportTicket {
+  id         String         @id @default(cuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  content    String
+  status     TicketStatus   @default(PENDING)
+  priority   TicketPriority @default(MEDIUM)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @default(now()) @updatedAt
+  resolvedAt DateTime? // Ticket çözüldüğünde doldurulur
+
+  @@map("support_ticket")
+}
+
+enum TicketStatus {
+  PENDING
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSubscriptionId String             @unique
+  stripeCustomerId     String
+  stripePriceId        String
+  stripeProductId      String
+  status               SubscriptionStatus
+  currentPeriodStart   DateTime
+  currentPeriodEnd     DateTime
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+
+  // Paket ilişkisi
+  packageId String?
+  package   Packages? @relation(fields: [packageId], references: [id])
+
+  // Business Information (eski kayıtlar için yedek alanlar)
+  packageName         String?
+  businessField       String[]
+  domainName          String?
+  hasDomain           String?
+  socialMediaAccounts String[]
+  packageAnswers      Json?
+
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscription")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  PAST_DUE
+  TRIALING
+  UNPAID
+}
+
+model Order {
+  id             String        @id @default(cuid())
+  userId         String? // nullable - order can exist before user signup
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  // Essential Order Info
+  orderNumber String @unique // human readable short token
+  formEmail   String // email from form (for linking)
+
+  // Stripe Information
+  stripeSessionId       String? @unique
+  stripePaymentIntentId String?
+  stripeSubscriptionId  String?
+
+  // Package Information
+  packageName    String
+  selectedAddons String[]
+
+  // Customer Info from Form (stored as historical record)
+  customerName  String? // name from form
+  customerPhone String? // Personal phone from form
+  companyName   String? // Company name from form  
+  companyEmail  String? // Company email from form (optional)
+
+  // Business Information (from form)
+  businessField       String[]
+  hasDomain           String?
+  domainName          String?
+  hasSocialMedia      String?
+  socialMediaAccounts String[]
+  packageAnswers      Json?
+
+  // Brand and Content Information (from form)
+  logo        String?
+  brandColors String?
+  contentInfo String?
+
+  packageId String?
+  package   Packages? @relation(fields: [packageId], references: [id])
+
+  // Project Details
+  projectDescription  String?
+  specialRequirements String?
+  exampleSites        String?
+  additionalNotes     String?
+
+  // Pricing
+  packagePrice Float
+  addOnsPrice  Float @default(0)
+  totalPrice   Float
+
+  // Status
+  status OrderStatus @default(PENDING_PAYMENT)
+
+  // Claim System
+  claimToken          String?   @unique // for order claiming
+  claimTokenExpiresAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payments Payment[]
+
+  @@map("order")
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT // Draft order, no payment yet
+  PAID // Payment completed
+  PROCESSING // Order being worked on
+  COMPLETED // Order finished
+  CANCELED // Order canceled
+  FAILED // Payment failed
+}
+
+// Payment records for orders
+model Payment {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  stripePaymentIntentId String? @unique
+  amount                Int // Amount in cents
+  currency              String  @default("usd")
+  status                String // succeeded, failed, pending, etc.
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("payment")
+}
+
+model Category {
+  id            String       @id @default(cuid())
+  name          String
+  slug          String       @unique // URL friendly
+  type          CategoryType // TOOL / SERVICE / THEME
+  parentId      String? // null ise root kategori
+  parent        Category?    @relation("CategorySubcategories", fields: [parentId], references: [id])
+  subcategories Category[]   @relation("CategorySubcategories")
+  items         Item[] // Tools / Services / Themes
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @default(now()) @updatedAt
+}
+
+enum CategoryType {
+  TOOL
+  SERVICE
+  THEME
+}
+
+model Item {
+  id             String   @id @default(cuid())
+  name           String
+  slug           String   @unique
+  description    String?
+  image          String?
+  type           ItemType
+  categoryId     String
+  category       Category @relation(fields: [categoryId], references: [id])
+  price          Float?
+  features       String[]
+  optionalAddons String[]
+  userId         String? // Custom item oluşturursa userId girilir
+  user           User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  approved       Boolean  @default(true) // admin ekliyorsa true, user ekliyorsa onay bekleyebilir
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+}
+
+enum ItemType {
+  TOOL
+  THEME
+  TEMPLATE
+  CUSTOM_TOOL
+  CUSTOM_THEME
+}
